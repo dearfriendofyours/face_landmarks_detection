@@ -1,0 +1,9 @@
+.venv/
+.vscode/
+elements/
+masked_image/
+models/
+worker/nodes/
+bad.py
+coord.py
+variant2.py
