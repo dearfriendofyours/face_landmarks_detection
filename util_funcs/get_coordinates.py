@@ -1,4 +1,4 @@
-
+from mediapipe.framework.formats import landmark_pb2
 
 landmark_indicies = {
     'nose':[1, 2, 4, 5, 6, 19, 275, 278, 294, 168, 45, 48, 440, 64, 195, 197, 326, 327, 344, 220, 94, 97, 98, 115],
@@ -45,5 +45,46 @@ def get_coordinates(detection_results, image):
                     coords_list[key] = temp
                 
                 return coords_list
+    else:
+            print("No detected landmarks on image")
+            
+def get_coordinates_for_async(detection_results, image):
+    
+    """
+    На вход принимает результаты обработки моделью mediapipe face mesh и оригинальный кадр
+    
+    Создаёт словарь с координатами ключевых точек отбластей лица:
+    
+    ['nose', 'lips', 'right eyebrow', 'left eyebrow', 'right eye', 'left eye', 'face_oval']
+
+    Returns:
+        dict[str:{int:(int,ing)}] 
+        каждая область содержит набор точек
+    """
+    if detection_results.face_landmarks:  
+        face_landmarks_list = detection_results.face_landmarks
+    
+
+    # Loop through the detected faces to visualize.
+        for idx in range(len(face_landmarks_list)):
+            face_landmarks = face_landmarks_list[idx]
+
+            # Draw the face landmarks.
+            face_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
+            face_landmarks_proto.landmark.extend([
+            landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in face_landmarks
+            ])
+                        
+            coords_list = {}
+            for key in keys:
+                        temp = {}
+                        for index in landmark_indicies[key]:
+                            x = int(face_landmarks_proto.landmark[index].x * image.shape[1])
+                            y = int(face_landmarks_proto.landmark[index].y * image.shape[0]) 
+                            temp[index] = (x,y)
+                        
+                        coords_list[key] = temp
+                    
+            return coords_list
     else:
             print("No detected landmarks on image")

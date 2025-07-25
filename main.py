@@ -43,7 +43,7 @@ def face_mesh_video(video_source):
         
     
 
-        # Draw the face mesh annotations on the image.
+        # Рисуем маску на кадре
             image.flags.writeable = True
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         
@@ -75,7 +75,7 @@ def face_mesh_video(video_source):
             
             if cv2.waitKey(5) & 0xFF == ord('q'):
                 return image, org_image, results
-                # exit()
+                
             
     cap.release()
     cv2.destroyAllWindows()
@@ -88,18 +88,13 @@ if __name__ == "__main__":
    
    coordinates_list = get_coordinates(detection_results, image)
    
-   draw_dots_on_image(detection_results,org_image)
+   dotted_image = draw_dots_on_image(detection_results, org_image)
    
 #    print(coordinates_list)
    
-   
-   
-#    cv2.imshow("org", org_image)
+#    cv2.imshow('dl', dotted_image)
    
 #    cv2.waitKey(0)
    
-#    cv2.imshow('mask', image)
-   
-#    cv2.waitKey(0)
 
    

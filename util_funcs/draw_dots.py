@@ -1,3 +1,4 @@
+from mediapipe.framework.formats import landmark_pb2
 import cv2
 
 
@@ -35,6 +36,44 @@ def draw_dots_on_image(detection_results, image):
             
                     
             
-                cv2.imshow('t', image)
+                # cv2.imshow('t', image)
                     
-                cv2.waitKey(0)
+                # cv2.waitKey(0)
+                
+                return image
+            
+def draw_dots_on_image_for_async(detection_results, image):
+
+    face_landmarks_list = detection_results.face_landmarks
+  
+
+  
+    for idx in range(len(face_landmarks_list)):
+        face_landmarks = face_landmarks_list[idx]
+
+        
+        face_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
+        face_landmarks_proto.landmark.extend([
+        landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in face_landmarks
+        ])
+                    
+        coords_list = {}
+        for key in keys:
+                    temp = {}
+                    for index in landmark_indicies[key]:
+                        x = int(face_landmarks_proto.landmark[index].x * image.shape[1])
+                        y = int(face_landmarks_proto.landmark[index].y * image.shape[0]) 
+                        temp[index] = (x,y)
+                    
+                    coords_list[key] = temp    
+                    
+                    for index in landmark_indicies[key]:
+                        cv2.circle(image, (coords_list[key][index][0], coords_list[key][index][1]), 2,(0,255,0), -1)
+            
+                    
+            
+                # cv2.imshow('t', image)
+                    
+                # cv2.waitKey(0)
+                
+        return image
